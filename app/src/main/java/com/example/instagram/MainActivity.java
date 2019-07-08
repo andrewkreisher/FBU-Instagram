@@ -32,6 +32,17 @@ public class MainActivity extends AppCompatActivity {
         signupBtn = findViewById(R.id.btnSignup);
 
 
+
+        //check if user is already logged in, if so move to home page instead
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        } else {
+            ;
+        }
+
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
