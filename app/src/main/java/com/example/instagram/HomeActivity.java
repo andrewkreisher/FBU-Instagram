@@ -3,6 +3,8 @@ package com.example.instagram;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -24,6 +27,9 @@ public class HomeActivity extends AppCompatActivity {
     public String photoFileName = "photo.jpg";
     public byte[] photo;
     File photoFile;
+    RecyclerView rvPosts;
+    ArrayList<Post> posts;
+    PostAdapter postAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +58,22 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        rvPosts = (RecyclerView) findViewById(R.id.rvPosts);
+        //init arraylist / data source
+        posts = new ArrayList<>();
+        //construct adapter from datasource
+        postAdapter = new PostAdapter(posts);
+        //recyclerview setup (layoutmanager, use adapter)
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvPosts.setLayoutManager(linearLayoutManager);
+        rvPosts.setAdapter(postAdapter);
+
+
+
         loadTopPosts();
+
+
     }
 
     public void loadTopPosts(){
@@ -65,6 +86,8 @@ public class HomeActivity extends AppCompatActivity {
                 if (e==null){
                     for (int i = 0; i < objects.size(); i++) {
                         Log.d("Home", "Post["+i+"]: " + objects.get(i).getDescription() + "\nUsername: " + objects.get(i).getUser().getUsername());
+                        posts.add(objects.get(i));
+                        postAdapter.notifyItemInserted(posts.size() - 1);
                     }
                 } else {
                     e.printStackTrace();
