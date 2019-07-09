@@ -12,71 +12,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.instagram.model.Post;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity {
 
-    private Button logoutBtn;
-    private Button imageBtn;
+    private Button cameraBtn;
     public final String APP_TAG = "MyCustomApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
-    public byte[] photo;
     File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_camera);
 
-        logoutBtn = findViewById(R.id.btnLogout);
-        imageBtn = findViewById(R.id.btnImage);
+        cameraBtn = findViewById(R.id.btnCamera);
 
-        imageBtn.setOnClickListener(new View.OnClickListener() {
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home2camera = new Intent(HomeActivity.this, CameraActivity.class);
-                startActivity(home2camera);
-//                onLaunchCamera(v);
-//                home2camera.putExtra("image", photo);
-//                startActivity(home2camera);
-
+                onLaunchCamera(v);
             }
         });
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser.logOut();
-                Intent logout2login = new Intent(HomeActivity.this, MainActivity.class);
-                startActivity(logout2login);
-            }
-        });
 
-        final Post.Query postsQuery = new Post.Query();
-        postsQuery.getTop().withUser();
-
-        postsQuery.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                if (e==null){
-                    for (int i = 0; i < objects.size(); i++) {
-                        Log.d("Home", "Post["+i+"]: " + objects.get(i).getDescription() + "\nUsername: " + objects.get(i).getUser().getUsername());
-                    }
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
 
@@ -89,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         // wrap File object into a content provider
         // required for API >= 24
         // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(HomeActivity.this, "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(CameraActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
@@ -122,23 +85,14 @@ public class HomeActivity extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Intent camera2post = new Intent(this, CameraActivity.class);
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                takenImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                photo = stream.toByteArray();
-
-                //camera2post.putExtra("image", byteArray);
-                //ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
-                //ivPreview.setImageBitmap(takenImage);
-                //startActivity(camera2post);
+                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
+                ivPreview.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-
 }
