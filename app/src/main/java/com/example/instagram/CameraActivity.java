@@ -12,14 +12,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.instagram.model.Post;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class CameraActivity extends AppCompatActivity {
 
     private Button cameraBtn;
+    private Button postBtn;
+    private EditText captionEt;
+    private Bitmap image;
     public final String APP_TAG = "MyCustomApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
@@ -39,7 +50,58 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
+        captionEt = findViewById(R.id.etCaption);
 
+        postBtn = findViewById(R.id.btnPost);
+
+        captionEt.setVisibility(View.INVISIBLE);
+
+        postBtn.setVisibility(View.INVISIBLE);
+
+        postBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String description = captionEt.getText().toString();
+                final ParseUser user = ParseUser.getCurrentUser();
+                final ParseFile picture = conversionBitmapParseFile(image);
+
+                createPost(description,picture,user);
+                Intent post2home = new Intent(CameraActivity.this, HomeActivity.class);
+                startActivity(post2home);
+
+            }
+        });
+
+
+
+
+    }
+
+    private void createPost(String description, ParseFile image, ParseUser user){
+        final Post newPost = new Post();
+        newPost.setDescription(description);
+        newPost.setImage(image);
+        newPost.setUser(user);
+        newPost.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e==null){
+                    Log.d("Camera", "create Post Success!");
+                    Toast.makeText(CameraActivity.this, "Post created!", Toast.LENGTH_LONG).show();
+                }else{
+                    e.printStackTrace();
+                    Toast.makeText(CameraActivity.this, "Post creation Failed :(", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] imageByte = byteArrayOutputStream.toByteArray();
+        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
+        return parseFile;
     }
 
 
@@ -86,10 +148,14 @@ public class CameraActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                image = takenImage;
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(takenImage);
+                captionEt.setVisibility(View.VISIBLE);
+
+                postBtn.setVisibility(View.VISIBLE);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
