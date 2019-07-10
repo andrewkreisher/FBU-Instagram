@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.instagram.model.Post;
 
 import java.util.List;
@@ -45,24 +46,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 .load(post.getImage().getUrl())
                 .into(viewHolder.ivImage);
 
+        Glide.with(context)
+                .load("https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/user.png")
+                .apply(RequestOptions.circleCropTransform())
+                .into(viewHolder.ivProfile);
 
 
-
-        //populate view w data
-        //viewHolder.tvUsername.setText(post.getUser());
-//        viewHolder.tvBody.setText(tweet.body);
-//        viewHolder.tvHandle.setText("@"+tweet.user.screenName);
-//        viewHolder.tvDate.setText("- " + getRelativeTimeAgo(tweet.createdAt));
-//        Glide.with(context)
-//                .load(tweet.user.profileImageUrl)
-//                .apply(RequestOptions.circleCropTransform())
-//                .into(viewHolder.ivProfileImage);
 
 
     }
 
     public PostAdapter(List<Post> posts){
         mPosts = posts;
+    }
+
+    public void clear() {
+        mPosts.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Post> list) {
+        mPosts.addAll(list);
+        notifyDataSetChanged();
     }
 
 
