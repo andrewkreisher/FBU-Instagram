@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements PostAdapter.OnClickListener {
 
     private Button logoutBtn;
     private Button imageBtn;
@@ -65,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
         //init arraylist / data source
         posts = new ArrayList<>();
         //construct adapter from datasource
-        postAdapter = new PostAdapter(posts);
+        postAdapter = new PostAdapter(posts, this);
         //recyclerview setup (layoutmanager, use adapter)
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -95,7 +95,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void loadTopPosts(){
+
         final Post.Query postsQuery = new Post.Query();
+
+        //postsQuery.whereEqualTo("user", ParseUser.getCurrentUser());
         postsQuery.getTop().withUser();
 
         postsQuery.findInBackground(new FindCallback<Post>() {
@@ -115,6 +118,18 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onClick(int i) {
+        Intent post2details = new Intent(HomeActivity.this, DescriptionActivity.class);
+        post2details.putExtra("date", posts.get(i).getCreatedAt().toString());
+        post2details.putExtra("caption", posts.get(i).getDescription());
+        post2details.putExtra("image", posts.get(i).getImage().getUrl());
+
+
+        startActivity(post2details);
+    }
+
 
 
 

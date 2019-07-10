@@ -68,6 +68,7 @@ public class CameraActivity extends AppCompatActivity {
                 createPost(description,picture,user);
                 Intent post2home = new Intent(CameraActivity.this, HomeActivity.class);
                 startActivity(post2home);
+                finish();
 
             }
         });

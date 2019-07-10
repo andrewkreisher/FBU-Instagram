@@ -18,16 +18,23 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     private List<Post> mPosts;
+    private OnClickListener monClickListener;
+
     RecyclerView rvPosts;
     Context context;
+
+
+    public PostAdapter(List<Post> posts, OnClickListener onClickListener){
+        mPosts = posts;
+        monClickListener = onClickListener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        View tweetView = inflater.inflate(R.layout.item_insta, viewGroup, false );
-        ViewHolder viewHolder = new ViewHolder(tweetView);
+        View instaView = inflater.inflate(R.layout.item_insta, viewGroup, false );
+        ViewHolder viewHolder = new ViewHolder(instaView, monClickListener);
         return viewHolder;
 
     }
@@ -46,6 +53,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 .load(post.getImage().getUrl())
                 .into(viewHolder.ivImage);
 
+//        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent post2description = new Intent(context, DescriptionActivity.class);
+//                Toast.makeText(context, "Clicked", Toast.LENGTH_LONG);
+//            }
+//        });
+
         Glide.with(context)
                 .load("https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/user.png")
                 .apply(RequestOptions.circleCropTransform())
@@ -56,9 +71,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     }
 
-    public PostAdapter(List<Post> posts){
-        mPosts = posts;
-    }
+
 
     public void clear() {
         mPosts.clear();
@@ -73,21 +86,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
 
 
+
     @Override
     public int getItemCount() {
         return mPosts.size();
     }
 
     //create viewholder class
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView ivProfile;
         public TextView tvUsername;
         public TextView tvUsername2;
         public TextView tvDescription;
         public TextView tvDate;
         public ImageView ivImage;
+        OnClickListener onClickListener;
 
-        public ViewHolder(View itemView){
+
+        public ViewHolder(View itemView, OnClickListener onClickListener){
             super(itemView);
             //perform findviewbyid lookups
             ivProfile = (ImageView) itemView.findViewById(R.id.ivProfile);
@@ -96,8 +112,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             tvUsername2 = (TextView) itemView.findViewById(R.id.tvUsername2);
             //tvDate = (TextView) itemView.findViewById(R.id.tvDate);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
+            this.onClickListener  = onClickListener;
+            itemView.setOnClickListener(this);
+
+
         }
 
+        @Override
+        public void onClick(View v) {
+            onClickListener.onClick(getAdapterPosition());
+        }
+
+    }
+
+    public interface OnClickListener{
+        void onClick(int position);
     }
 
 }
