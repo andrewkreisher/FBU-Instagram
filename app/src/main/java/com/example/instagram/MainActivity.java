@@ -29,9 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         usernameInput = findViewById(R.id.etUsername);
         passwordInput = findViewById(R.id.etPassword);
-        loginBtn  = findViewById(R.id.btnLogin);
+        loginBtn = findViewById(R.id.btnLogin);
         signupBtn = findViewById(R.id.btnSignup);
-
 
 
         //check if user is already logged in, if so move to home page instead
@@ -66,18 +65,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void login(String username, String password){
+    //login using credentials from parse database
+    private void login(String username, String password) {
         //Todo
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
-                if(e == null){
-                    Log.d("LoginActivity","Login succesful");
+                if (e == null) {
+                    Log.d("LoginActivity", "Login succesful");
                     final Intent login2home = new Intent(MainActivity.this, HomeActivity.class);
                     startActivity(login2home);
                     finish();
                 } else {
-                    Log.e("LoginActivity","Login failure");
+                    Log.e("LoginActivity", "Login failure");
                     e.printStackTrace();
                 }
             }
@@ -85,26 +85,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void signup(String username, String password){
+    //create new user object on parse database
+    private void signup(String username, String password) {
         ParseUser user = new ParseUser();
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
-        //user.setEmail("email@example.com");
-        // Set custom properties
-        //user.put("phone", "650-253-0000");
-        // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e == null) {
                     //enter home
-                    Log.d("LoginActivity","Signup succesful");
+                    Log.d("LoginActivity", "Signup succesful");
                     final Intent signup2home = new Intent(MainActivity.this, HomeActivity.class);
                     startActivity(signup2home);
                     finish();
                 } else {
                     // Sign up didn't succeed. Look at the ParseException
-                    Log.e("LoginActivity","Signup failure");
+                    Log.e("LoginActivity", "Signup failure");
                     e.printStackTrace();
                 }
             }

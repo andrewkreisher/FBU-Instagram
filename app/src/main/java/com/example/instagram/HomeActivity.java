@@ -46,7 +46,6 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
         getSupportActionBar().hide();
 
 
-
         ivPost = findViewById(R.id.ivPost);
 
         ivPost.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +55,6 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
                 startActivity(home2camera);
             }
         });
-
 
 
         ivLogout = findViewById(R.id.ivLogout);
@@ -98,7 +96,6 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
                 loadTopPosts();
@@ -106,42 +103,35 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
         });
 
 
-
-
         loadTopPosts();
 
 
     }
 
+    //increase limit for infinite scroll
     public void loadNextData(int additional) {
         add += additional;
         loadTopPosts();
-        //populateTimeline(maxID);
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+
     }
 
-    public void loadTopPosts(){
 
-            final Post.Query postsQuery = new Post.Query();
+    //loads "limit" number of posts from Parse database
+    public void loadTopPosts() {
 
-        //postsQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-//        postsQuery.whereContainedIn("users", ParseUser.getCurrentUser());
+        final Post.Query postsQuery = new Post.Query();
+
         postsQuery.getTop(add).withUser();
-
 
         postsQuery.orderByDescending("createdAt");
 
         postsQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> objects, ParseException e) {
-                if (e==null){
+                if (e == null) {
                     postAdapter.clear();
                     for (int i = 0; i < objects.size(); i++) {
-                        Log.d("Home", "Post["+i+"]: " + objects.get(i).getDescription() + "\nUsername: " + objects.get(i).getUser().getUsername());
+                        Log.d("Home", "Post[" + i + "]: " + objects.get(i).getDescription() + "\nUsername: " + objects.get(i).getUser().getUsername());
                         posts.add(objects.get(i));
                         postAdapter.notifyItemInserted(posts.size() - 1);
                     }
@@ -153,6 +143,7 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
         });
     }
 
+    //opens description page when clicking on post
     @Override
     public void onClick(int i) {
         Intent post2details = new Intent(HomeActivity.this, DescriptionActivity.class);
@@ -164,8 +155,6 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
 
         startActivity(post2details);
     }
-
-
 
 
 }

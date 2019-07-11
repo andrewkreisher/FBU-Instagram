@@ -79,6 +79,7 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
+    //creates Parse Post object with given inputs
     private void createPost(String description, ParseFile image, ParseUser user){
         final Post newPost = new Post();
         newPost.setDescription(description);
@@ -101,6 +102,7 @@ public class CameraActivity extends AppCompatActivity {
         });
     }
 
+    //changes bitmap to parsefile
     public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
         ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
@@ -110,6 +112,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
 
+    //take picture itself
     public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -130,6 +133,7 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+    //get uri for ParseFile
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
@@ -147,6 +151,7 @@ public class CameraActivity extends AppCompatActivity {
         return file;
     }
 
+    //use image once taken
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {

@@ -30,7 +30,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     Context context;
 
 
-    public PostAdapter(List<Post> posts, OnClickListener onClickListener){
+    public PostAdapter(List<Post> posts, OnClickListener onClickListener) {
         mPosts = posts;
         monClickListener = onClickListener;
     }
@@ -40,46 +40,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         final int k = i;
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View instaView = inflater.inflate(R.layout.item_insta, viewGroup, false );
+        View instaView = inflater.inflate(R.layout.item_insta, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(instaView, monClickListener);
         ivLike = instaView.findViewById(R.id.ivLike);
         ivUnlike = instaView.findViewById(R.id.ivUnlike);
         ivUnlike.setVisibility(View.INVISIBLE);
-//        if (mPosts.get(i).getLikes().contains(ParseUser.getCurrentUser())){
-//            ivLike.setVisibility(View.GONE);
-//            ivUnlike.setVisibility(View.VISIBLE);
-//        } else {
-//            ivUnlike.setVisibility(View.GONE);
-//            ivLike.setVisibility(View.VISIBLE);
-//        }
-//        ivLike.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//
-//            public void onClick(View v) {
-//                Post post = mPosts.get(k);
-//                post.liked(ParseUser.getCurrentUser());
-//                ivLike.setVisibility(View.INVISIBLE);
-//                Log.d("likes", "liked");
-//                ivUnlike.setVisibility(View.VISIBLE);
-//            }
-//        });
-
-//        ivUnlike.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//
-//            public void onClick(View v) {
-//                Post post = mPosts.get(k);
-//                post.unlike();
-//                ivUnlike.setVisibility(View.GONE);
-//                Log.d("likes", "unliked");
-//                ivLike.setVisibility(View.VISIBLE);
-//            }
-//        });
 
         return viewHolder;
 
     }
-
 
 
     @Override
@@ -90,36 +59,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         viewHolder.tvDescription.setText(post.getDescription());
         viewHolder.tvUsername.setText(post.getUser().getUsername());
         viewHolder.tvUsername2.setText(post.getUser().getUsername());
-//        viewHolder.ivLike.setOnClickListener(new View.OnClickListener()
-
-//        {
-//            @Override
-//
-//            public void onClick(View v) {
-//
-//                post.liked(ParseUser.getCurrentUser());
-//                ivLike.setVisibility(View.INVISIBLE);
-//                Log.d("likes", "liked");
-//                ivUnlike.setVisibility(View.VISIBLE);
-//            }
-//        });
-
-
 
 
         Glide.with(context)
                 .load(post.getImage().getUrl())
                 .into(viewHolder.ivImage);
 
-//        viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent post2description = new Intent(context, DescriptionActivity.class);
-//                Toast.makeText(context, "Clicked", Toast.LENGTH_LONG);
-//            }
-//        });
 
-        //post.getUser().getParseFile("profilepic").getUrl()
         if (post.getUser().getParseFile("profilepic") == null) {
             Glide.with(context)
                     .load("https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/256x256/plain/user.png")
@@ -133,10 +79,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
 
-
-
     }
-
 
 
     public void clear() {
@@ -151,15 +94,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
 
-
-
     @Override
     public int getItemCount() {
         return mPosts.size();
     }
 
     //create viewholder class
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView ivProfile;
         public TextView tvUsername;
         public TextView tvUsername2;
@@ -171,7 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         public ImageView ivUnlike;
 
 
-        public ViewHolder(View itemView, OnClickListener onClickListener){
+        public ViewHolder(View itemView, OnClickListener onClickListener) {
             super(itemView);
             //perform findviewbyid lookups
             ivProfile = (ImageView) itemView.findViewById(R.id.ivProfile);
@@ -180,7 +121,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             tvUsername2 = (TextView) itemView.findViewById(R.id.tvUsername2);
             //tvDate = (TextView) itemView.findViewById(R.id.tvDate);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
-            this.onClickListener  = onClickListener;
+            this.onClickListener = onClickListener;
             itemView.setOnClickListener(this);
             ivLike = itemView.findViewById(R.id.ivLike);
             ivUnlike = itemView.findViewById(R.id.ivUnlike);
@@ -195,6 +136,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             });
 
+
             ivUnlike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -202,8 +144,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     ivLike.setVisibility(View.VISIBLE);
                 }
             });
-
-
 
 
         }
@@ -215,7 +155,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     }
 
-    public interface OnClickListener{
+    public interface OnClickListener {
         void onClick(int position);
     }
 

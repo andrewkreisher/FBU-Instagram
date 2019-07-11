@@ -63,14 +63,11 @@ public class LogoutActivity extends AppCompatActivity {
                 final ParseUser user = ParseUser.getCurrentUser();
                 final ParseFile picture = conversionBitmapParseFile(image);
 
-                createPost(picture,user);
+                createPost(picture, user);
                 btnApply.setVisibility(View.INVISIBLE);
 
             }
         });
-
-
-
 
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -84,15 +81,16 @@ public class LogoutActivity extends AppCompatActivity {
         });
     }
 
-    private void createPost(ParseFile image1, ParseUser user){
+    //add profile picture to user object on parse database
+    private void createPost(ParseFile image1, ParseUser user) {
         user.put("profilepic", image1);
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e==null){
+                if (e == null) {
                     Log.d("profile", "create profilepic Success!");
                     Toast.makeText(LogoutActivity.this, "Profile Picture updated!", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     e.printStackTrace();
                     Toast.makeText(LogoutActivity.this, "Post creation Failed :(", Toast.LENGTH_LONG).show();
                 }
@@ -100,16 +98,16 @@ public class LogoutActivity extends AppCompatActivity {
         });
     }
 
-
-
-    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+    //convert bitmap to parsefile
+    public ParseFile conversionBitmapParseFile(Bitmap imageBitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] imageByte = byteArrayOutputStream.toByteArray();
-        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
+        ParseFile parseFile = new ParseFile("image_file.png", imageByte);
         return parseFile;
     }
 
+    //open camera to take profile pic
     public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -130,6 +128,7 @@ public class LogoutActivity extends AppCompatActivity {
         }
     }
 
+    //get pic uri for profile pic
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
@@ -137,7 +136,7 @@ public class LogoutActivity extends AppCompatActivity {
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
 
         // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(APP_TAG, "failed to create directory");
         }
 
@@ -147,6 +146,7 @@ public class LogoutActivity extends AppCompatActivity {
         return file;
     }
 
+    //set image
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
