@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DescriptionActivity"></activity>
+        <activity android:name=".LogoutActivity"></activity>
+        <activity android:name=".DescriptionActivity" />
         <activity android:name=".CameraActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".MainActivity">

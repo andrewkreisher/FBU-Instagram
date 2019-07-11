@@ -12,6 +12,7 @@ public class Post extends ParseObject {
     private final static String KEY_DESCRIPTION = "description";
     private final static String KEY_IMAGE = "image";
     private final static String KEY_USER = "user";
+    private static int limit = 20;
 
     public String getDescription(){
         return getString(KEY_DESCRIPTION);
@@ -41,8 +42,8 @@ public class Post extends ParseObject {
             super(Post.class);
         }
 
-        public Query getTop(){
-            setLimit(20);
+        public Query getTop(int add){
+            setLimit(20 + add);
             return this;
         }
 

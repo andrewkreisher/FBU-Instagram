@@ -9,11 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.instagram.model.Post;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +32,12 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
     ArrayList<Post> posts;
     PostAdapter postAdapter;
     SwipeRefreshLayout swipeContainer;
+    ImageView ivLogout;
+    ImageView ivPost;
+    private EndlessRecyclerViewScrollListener scrollListener;
+    String maxId = null;
+    int add = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,25 +45,27 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
         setContentView(R.layout.activity_home);
         getSupportActionBar().hide();
 
-        logoutBtn = findViewById(R.id.btnLogout);
-        imageBtn = findViewById(R.id.btnImage);
 
-        imageBtn.setOnClickListener(new View.OnClickListener() {
+
+        ivPost = findViewById(R.id.ivPost);
+
+        ivPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent home2camera = new Intent(HomeActivity.this, CameraActivity.class);
                 startActivity(home2camera);
-
-
             }
         });
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
+
+
+        ivLogout = findViewById(R.id.ivLogout);
+
+        ivLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseUser.logOut();
-                Intent logout2login = new Intent(HomeActivity.this, MainActivity.class);
-                startActivity(logout2login);
+                Intent home2logout = new Intent(HomeActivity.this, LogoutActivity.class);
+                startActivity(home2logout);
             }
         });
 
@@ -70,6 +78,17 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvPosts.setLayoutManager(linearLayoutManager);
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextData(5);
+
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
         rvPosts.setAdapter(postAdapter);
 
         // Lookup the swipe container view
@@ -94,19 +113,33 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
 
     }
 
+    public void loadNextData(int additional) {
+        add += additional;
+        loadTopPosts();
+        //populateTimeline(maxID);
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+    }
+
     public void loadTopPosts(){
 
         final Post.Query postsQuery = new Post.Query();
 
         //postsQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-        postsQuery.getTop().withUser();
+        postsQuery.getTop(add).withUser();
+
+
+        postsQuery.orderByDescending("createdAt");
 
         postsQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> objects, ParseException e) {
                 if (e==null){
                     postAdapter.clear();
-                    for (int i = objects.size()-1; i >= 0; i--) {
+                    for (int i = 0; i < objects.size(); i++) {
                         Log.d("Home", "Post["+i+"]: " + objects.get(i).getDescription() + "\nUsername: " + objects.get(i).getUser().getUsername());
                         posts.add(objects.get(i));
                         postAdapter.notifyItemInserted(posts.size() - 1);

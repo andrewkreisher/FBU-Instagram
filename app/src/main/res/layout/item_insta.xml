@@ -56,7 +56,7 @@
 
     <TextView
         android:id="@+id/tvUsername2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -69,15 +69,22 @@
 
     <TextView
         android:id="@+id/tvDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="16dp"
         android:text="Description  "
         android:textColor="#393A3B"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.008"
         app:layout_constraintStart_toEndOf="@+id/tvUsername2"
-        app:layout_constraintTop_toBottomOf="@+id/ivComment" />
+        app:layout_constraintTop_toBottomOf="@+id/ivComment"
+        app:layout_constraintVertical_bias="1.0" />
 
     <View
         android:id="@+id/view"
@@ -85,7 +92,7 @@
         android:layout_height="0.2dp"
         android:layout_marginTop="16dp"
         android:background="#5C5B5B"
-        app:layout_constraintTop_toBottomOf="@+id/tvUsername2"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
         tools:layout_editor_absoluteX="-8dp" />
 
     <ImageView
