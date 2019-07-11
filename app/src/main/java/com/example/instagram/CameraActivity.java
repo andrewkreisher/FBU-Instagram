@@ -24,6 +24,7 @@ import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -83,6 +84,9 @@ public class CameraActivity extends AppCompatActivity {
         newPost.setDescription(description);
         newPost.setImage(image);
         newPost.setUser(user);
+        newPost.put("likes", 0);
+        ArrayList<String> empty = new ArrayList<>();
+        newPost.put("liked_by", empty);
         newPost.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

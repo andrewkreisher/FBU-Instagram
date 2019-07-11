@@ -126,9 +126,10 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
 
     public void loadTopPosts(){
 
-        final Post.Query postsQuery = new Post.Query();
+            final Post.Query postsQuery = new Post.Query();
 
         //postsQuery.whereEqualTo("user", ParseUser.getCurrentUser());
+//        postsQuery.whereContainedIn("users", ParseUser.getCurrentUser());
         postsQuery.getTop(add).withUser();
 
 
@@ -158,6 +159,7 @@ public class HomeActivity extends AppCompatActivity implements PostAdapter.OnCli
         post2details.putExtra("date", posts.get(i).getCreatedAt().toString());
         post2details.putExtra("caption", posts.get(i).getDescription());
         post2details.putExtra("image", posts.get(i).getImage().getUrl());
+        post2details.putExtra("likes", posts.get(i).getLikes().size());
 
 
         startActivity(post2details);

@@ -17,6 +17,7 @@ public class DescriptionActivity extends AppCompatActivity {
     TextView tvDate;
     TextView tvCaption;
     ImageView ivImage;
+    TextView tvLikes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,9 @@ public class DescriptionActivity extends AppCompatActivity {
         tvDate = findViewById(R.id.tvDate);
         tvCaption = findViewById(R.id.tvCaption);
         ivImage = findViewById(R.id.ivImage);
+        tvLikes = findViewById(R.id.tvLikes);
+
+        tvLikes.setText("Likes: " + getIntent().getIntExtra("likes", 0));
 
         tvCaption.setText("Caption: " + getIntent().getStringExtra("caption"));
 
